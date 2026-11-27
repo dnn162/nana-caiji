@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>呐呐财记</title>
+<meta name="theme-color" content="#BE7259">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="呐呐财记">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+/* ===== 呐呐财记 · 样式 ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  /* 默认：抹茶奶绿 */
+  --paper: #F6F5ED;
+  --paper-2: #ECEEE1;
+  --card: #FFFFFF;
+  --ink: #343A2F;
+  --ink-2: #5B624F;
+  --muted: #969B8B;
+  --line: #E3E6D5;
+  --line-2: #EFF1E5;
+  --rose: #7C9464;
+  --rose-deep: #5A7245;
+  --rose-soft: #E9EFDE;
+  --sage: #B98A5E;
+  --sage-soft: #F6EBDE;
+  --gold: #C0A15C;
+  --gold-soft: #F7F0DB;
+  --glow-1: #E9F1DC;
+  --glow-2: #F7EFE0;
+  --hero-1: #FCFBF5;
+  --hero-2: #E9F0DD;
+  --hero-3: #F8F1E3;
+  --hero-line: #DCE4CB;
+  --shadow: 0 1px 2px rgba(80, 95, 60, .05), 0 10px 26px rgba(80, 95, 60, .07);
+  --r: 18px;
+  --serif: "Songti SC", "SimSun", "Source Han Serif SC", Georgia, serif;
+  --sans: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+}
+
+/* 备用配色 A：雾霾蓝 */
+body.theme-blue {
+  --paper: #F4F6F7;
+  --paper-2: #E7EEF1;
+  --ink: #2F3A3E;
+  --ink-2: #52646A;
+  --muted: #8C9BA1;
+  --line: #DBE6E9;
+  --line-2: #EDF2F4;
+  --rose: #5D8A96;
+  --rose-deep: #426D79;
+  --rose-soft: #E4EFF2;
+  --sage: #A9895F;
+  --sage-soft: #F4EDE3;
+  --gold: #BF9E58;
+  --gold-soft: #F6EFDA;
+  --glow-1: #E2EEF2;
+  --glow-2: #F6EFE2;
+  --hero-1: #F8FBFC;
+  --hero-2: #E1EDF1;
+  --hero-3: #F7F0E3;
+  --hero-line: #D6E4E9;
+  --shadow: 0 1px 2px rgba(60, 90, 100, .05), 0 10px 26px rgba(60, 90, 100, .07);
+}
+
+/* 备用配色 B：藕粉紫 */
+body.theme-lilac {
+  --paper: #F8F5F7;
+  --paper-2: #EEE8EE;
+  --ink: #37313A;
+  --ink-2: #5D5363;
+  --muted: #9A909E;
+  --line: #E6DEE7;
+  --line-2: #F2EDF3;
+  --rose: #8B7099;
+  --rose-deep: #6C5379;
+  --rose-soft: #F0E9F2;
+  --sage: #8FA07E;
+  --sage-soft: #EDF1E7;
+  --gold: #C2A063;
+  --gold-soft: #F6EFDC;
+  --glow-1: #F0E7F2;
+  --glow-2: #F4EEE3;
+  --hero-1: #FCF9FB;
+  --hero-2: #EDE4EF;
+  --hero-3: #F6EFE3;
+  --hero-line: #E2D6E3;
+  --shadow: 0 1px 2px rgba(90, 70, 95, .05), 0 10px 26px rgba(90, 70, 95, .07);
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(820px 520px at 100% 0%, var(--glow-1) 0%, transparent 55%),
+    radial-gradient(700px 520px at 0% 100%, var(--glow-2) 0%, transparent 55%),
+    var(--paper);
+  transition: background-color .3s;
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app { display: flex; min-height: 100vh; }
+
+/* ---------- 侧栏 ---------- */
+.sidebar {
+  width: 230px; flex: 0 0 230px;
+  background: rgba(255, 255, 255, .7);
+  border-right: 1px solid var(--line);
+  padding: 22px 16px 16px;
+  display: flex; flex-direction: column; gap: 16px;
+  position: sticky; top: 0; height: 100vh;
+  backdrop-filter: blur(6px);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand svg { width: 38px; height: 38px; }
+.brand-name { font-family: var(--serif); font-size: 16px; font-weight: 700; letter-spacing: .04em; }
+.brand-sub { font-size: 10.5px; color: var(--muted); letter-spacing: .16em; }
+
+.money-box {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 15px 14px; text-align: center; box-shadow: var(--shadow);
+}
+.money-label { font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+.money-value { font-family: var(--serif); font-size: 32px; font-weight: 700; color: var(--rose-deep); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.money-value small { font-size: 13px; color: var(--muted); font-weight: 400; }
+.money-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+.nav { display: flex; flex-direction: column; gap: 3px; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px; padding: 10px 12px;
+  border: none; background: none; border-radius: 11px; cursor: pointer;
+  font-family: inherit; font-size: 13.5px; color: var(--ink-2); text-align: left; width: 100%;
+  transition: background .15s, color .15s;
+}
+.nav-item:hover { background: var(--paper-2); }
+.nav-item.active { background: var(--rose-soft); color: var(--rose-deep); font-weight: 600; }
+.nav-item .ico { width: 17px; text-align: center; }
+.nav-item .sum { margin-left: auto; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nav-item.active .sum { color: var(--rose-deep); }
+
+.side-foot { margin-top: auto; font-size: 10.5px; color: var(--muted); line-height: 1.7; border-top: 1px dashed var(--line); padding-top: 10px; }
+
+/* ---------- 主区 ---------- */
+.main { flex: 1; min-width: 0; padding: 28px 32px 60px; max-width: 1080px; }
+
+.page-head { margin-bottom: 18px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-title { font-family: var(--serif); font-size: 23px; font-weight: 700; }
+.page-sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.page-quote { font-family: var(--serif); font-size: 12.5px; color: var(--gold); border-left: 2px solid var(--gold-soft); padding-left: 10px; max-width: 260px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 17px 17px 15px; box-shadow: var(--shadow); margin-bottom: 15px;
+}
+.card-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14.5px; margin-bottom: 3px; }
+.card-title .tag { font-size: 11px; font-weight: 500; color: var(--muted); background: var(--paper-2); border-radius: 99px; padding: 1px 8px; margin-left: auto; }
+.card-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; }
+
+.grid { display: grid; gap: 13px; }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* 概览 */
+.hero {
+  background: linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 60%, var(--hero-3) 100%);
+  border: 1px solid var(--hero-line);
+}
+.hero .k { font-size: 11.5px; color: var(--muted); letter-spacing: .08em; }
+.hero .v { font-family: var(--serif); font-size: 46px; font-weight: 700; color: var(--rose-deep); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.hero .v small { font-size: 15px; color: var(--muted); font-weight: 400; }
+.hero .row { display: flex; gap: 26px; margin-top: 12px; flex-wrap: wrap; }
+.hero .row div { font-size: 12.5px; color: var(--ink-2); }
+.hero .row b { font-variant-numeric: tabular-nums; }
+
+.stat { background: var(--paper); border: 1px solid var(--line-2); border-radius: 13px; padding: 12px 13px; }
+.stat .k { font-size: 11.5px; color: var(--muted); }
+.stat .v { font-family: var(--serif); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat .v em { font-style: normal; font-size: 11.5px; color: var(--muted); font-weight: 400; }
+.stat .bar { height: 5px; background: var(--line-2); border-radius: 99px; overflow: hidden; margin-top: 7px; }
+.stat .bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, color-mix(in srgb, var(--rose) 55%, #fff), var(--rose)); }
+.stat.sage .bar i { background: linear-gradient(90deg, color-mix(in srgb, var(--sage) 55%, #fff), var(--sage)); }
+.stat.gold .bar i { background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 55%, #fff), var(--gold)); }
+
+/* 日期条 */
+.datebar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.datebar .big { font-family: var(--serif); font-size: 20px; font-weight: 700; }
+.datebar .wd { font-size: 12.5px; color: var(--muted); }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 10px; border: 1px solid var(--line);
+  background: #fff; cursor: pointer; color: var(--ink-2); font-size: 14px; line-height: 1;
+}
+.icon-btn:hover { border-color: #E0C4B2; background: #FFFBF7; }
+input.inp, select.inp {
+  font-family: inherit; font-size: 13px; color: var(--ink); background: #fff;
+  border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+input.inp:focus, select.inp:focus { border-color: #DBA98E; box-shadow: 0 0 0 3px rgba(219, 169, 142, .16); }
+input.inp::placeholder { color: #C6BAAE; }
+
+/* 记一笔 */
+.add-row { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.chips { display: flex; gap: 7px; flex-wrap: wrap; }
+.chip {
+  font-family: inherit; font-size: 12.5px; padding: 6px 13px; border-radius: 99px;
+  border: 1px solid var(--line); background: #fff; color: var(--ink-2); cursor: pointer;
+  transition: all .15s;
+}
+.chip:hover { border-color: #DCC0AE; background: #FFFBF7; }
+.chip.on { background: var(--rose-soft); border-color: #E7C2B1; color: var(--rose-deep); font-weight: 600; }
+.chip.add { border-style: dashed; color: var(--muted); }
+
+.btn {
+  font-family: inherit; font-size: 13px; cursor: pointer; border-radius: 10px;
+  padding: 8px 16px; border: 1px solid transparent; background: var(--rose); color: #fff; font-weight: 600;
+  transition: all .15s;
+}
+.btn:hover { background: var(--rose-deep); }
+.btn.ghost { background: #fff; border-color: var(--line); color: var(--ink-2); font-weight: 500; }
+.btn.ghost:hover { border-color: #DCC0AE; background: #FFFBF7; }
+.btn.danger { background: #fff; border-color: #E7C9C4; color: #B25A4C; font-weight: 500; }
+.btn.sm { padding: 5px 11px; font-size: 12px; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* 列表 */
+.rec { display: flex; align-items: center; gap: 10px; padding: 8px 2px; border-bottom: 1px dashed var(--line-2); font-size: 13px; }
+.rec:last-child { border-bottom: none; }
+.rec .cat { font-weight: 600; min-width: 56px; }
+.rec .note { color: var(--muted); font-size: 12px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rec .amt { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--rose-deep); }
+.rec .del { border: none; background: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 0 4px; border-radius: 6px; }
+.rec .del:hover { color: #C0564A; background: var(--rose-soft); }
+
+.day {}
+.day-head { display: flex; align-items: baseline; gap: 10px; padding: 10px 2px 6px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.day-head .d { font-weight: 700; font-size: 13.5px; }
+.day-head .w { font-size: 11.5px; color: var(--muted); }
+.day-head .t { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--rose-deep); font-weight: 600; font-size: 13px; }
+.day-head .n { font-size: 11px; color: var(--muted); }
+.day-body { display: none; padding: 4px 0 8px; }
+.day.open .day-body { display: block; }
+
+/* 汇总 */
+.sum-card .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.bucket { background: var(--paper); border: 1px solid var(--line-2); border-radius: 12px; padding: 10px 12px; }
+.bucket .k { font-size: 11.5px; color: var(--muted); }
+.bucket .v { font-family: var(--serif); font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.bucket.other { cursor: pointer; }
+.bucket.other:hover { border-color: #DCC0AE; }
+.bucket .more { font-size: 10.5px; color: var(--rose); }
+.other-detail { margin-top: 8px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.other-detail .row { display: flex; font-size: 12.5px; color: var(--ink-2); padding: 3px 0; }
+.other-detail .row .n { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+.period { border-top: 1px dashed var(--line); margin-top: 12px; padding-top: 10px; }
+.period-head { display: flex; align-items: baseline; gap: 10px; cursor: pointer; }
+.period-head .l { font-size: 13px; font-weight: 600; }
+.period-head .c { font-size: 11px; color: var(--muted); }
+.period-head .t { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--rose-deep); }
+.period-body { display: none; margin-top: 8px; }
+.period.open .period-body { display: block; }
+
+.total-line { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
+.total-line b { font-family: var(--serif); font-size: 18px; color: var(--rose-deep); font-variant-numeric: tabular-nums; }
+
+.hint { font-size: 11.5px; color: var(--muted); }
+.empty { padding: 18px 8px; text-align: center; color: var(--muted); font-size: 12.5px; }
+
+/* 弹窗 */
+.mask { position: fixed; inset: 0; background: rgba(62, 55, 51, .28); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 50; }
+.mask.show { display: flex; }
+.modal { background: #fff; border-radius: 18px; padding: 20px; width: 100%; max-width: 360px; box-shadow: 0 24px 60px rgba(60, 45, 30, .22); }
+.modal-title { font-family: var(--serif); font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+.modal-body input { width: 100%; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+.save-flag {
+  position: fixed; right: 18px; bottom: 16px; background: rgba(255,255,255,.94);
+  border: 1px solid var(--line); color: var(--muted); font-size: 11.5px;
+  border-radius: 99px; padding: 5px 12px; box-shadow: var(--shadow);
+  opacity: 0; transition: opacity .3s; z-index: 40;
+}
+.save-flag.show { opacity: 1; }
+
+@media (max-width: 860px) {
+  .app { flex-direction: column; }
+  .sidebar { width: 100%; flex: none; height: auto; position: static; }
+  .nav { flex-direction: row; flex-wrap: wrap; }
+  .nav-item { width: auto; }
+  .nav-item .sum { display: none; }
+  .main { padding: 16px 13px 50px; }
+  .g3 { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .page-quote { display: none; }
+  .hero .v { font-size: 36px; }
+}
+
+/* 主题选择 */
+.themes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.theme-dot {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px;
+  border: 1px solid var(--line); border-radius: 12px; background: #fff; cursor: pointer;
+  font-family: inherit; font-size: 12.5px; color: var(--ink-2);
+}
+.theme-dot:hover { border-color: var(--rose); }
+.theme-dot.on { border-color: var(--rose); background: var(--rose-soft); color: var(--rose-deep); font-weight: 600; }
+.theme-dot i { width: 18px; height: 18px; border-radius: 50%; display: block; }
+.theme-dot i.m { background: linear-gradient(135deg, #7C9464 50%, #B98A5E 50%); }
+.theme-dot i.b { background: linear-gradient(135deg, #5D8A96 50%, #A9895F 50%); }
+.theme-dot i.l { background: linear-gradient(135deg, #8B7099 50%, #8FA07E 50%); }
+
+/* ---------- 手机上更顺手 ---------- */
+@media (max-width: 860px) {
+  .datebar { flex-wrap: wrap; gap: 8px; }
+  .datebar input[type="date"] { flex: 1 0 100%; width: 100% !important; }
+  .add-row { flex-wrap: wrap; }
+  .add-row .btn { flex: 0 0 auto; }
+  .main { padding: 14px 12px 60px; }
+  .card, .sec { border-radius: 15px; padding: 14px; }
+  .page-title { font-size: 21px; }
+  .btn { padding: 9px 16px; }
+  .ent { padding: 10px 2px; }
+  .ent .txt { font-size: 14px; }
+  .three { grid-template-columns: 1fr; }
+}
+
+/* 手机上禁止横向溢出 */
+@media (max-width: 860px) {
+  html, body { overflow-x: hidden; max-width: 100%; }
+  .app { width: 100%; }
+  .main { max-width: 100%; min-width: 0; box-sizing: border-box; }
+  .card, .sec, .stat-row, .three, .grid { max-width: 100%; }
+  .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .three { grid-template-columns: 1fr; }
+  input.inp, select.inp, textarea.inp { max-width: 100%; }
+}
+
+@media (max-width: 860px) {
+  .sidebar { min-width: 0; padding: 12px 10px 10px; }
+  .money-box, .brand, .nav, .stat, .card, .sec { min-width: 0; }
+  .money-value { font-size: 26px; }
+  .brand-name { font-size: 15px; }
+  .page-head { flex-direction: column; align-items: flex-start; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="main"></main>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">新增分类</div>
+    <div class="modal-body">
+      <input class="inp" id="modal-input" placeholder="例如：学习、交通、药、朋友">
+      <div class="hint" id="modal-hint">起个你自己记得住的名字就好。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="modal-cancel">取消</button>
+      <button class="btn" id="modal-ok">确定</button>
+    </div>
+  </div>
+</div>
+
+<div class="save-flag" id="save-flag"></div>
+
+<script>
+/* money.js —— 记账核心：按日/周/月汇总、三分类（伙食 / 网购 / 其他） */
+(function (root) {
+  'use strict';
+
+  var MEALS = '伙食';
+  var ONLINE = '网购';
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function toDate(s) {
+    if (s instanceof Date) return s;
+    if (!s) return new Date();
+    var p = String(s).split('-');
+    return new Date(+p[0], (+p[1] || 1) - 1, +p[2] || 1);
+  }
+  function dateStr(d) {
+    var x = toDate(d);
+    return x.getFullYear() + '-' + pad(x.getMonth() + 1) + '-' + pad(x.getDate());
+  }
+  function todayStr() { return dateStr(new Date()); }
+
+  var WD = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  function weekday(dateStrOrDate) { return WD[toDate(dateStrOrDate).getDay()]; }
+
+  /** 周一为一周开始 */
+  function weekStart(dateStrOrDate) {
+    var d = toDate(dateStrOrDate);
+    var wd = (d.getDay() + 6) % 7;      // 周一=0
+    d.setDate(d.getDate() - wd);
+    return dateStr(d);
+  }
+  function weekEnd(dateStrOrDate) {
+    var d = toDate(weekStart(dateStrOrDate));
+    d.setDate(d.getDate() + 6);
+    return dateStr(d);
+  }
+  function weekLabel(dateStrOrDate) {
+    var a = toDate(weekStart(dateStrOrDate)), b = toDate(weekEnd(dateStrOrDate));
+    return (a.getMonth() + 1) + '月' + a.getDate() + '日 – ' + (b.getMonth() + 1) + '月' + b.getDate() + '日';
+  }
+  function monthKey(dateStrOrDate) {
+    var d = toDate(dateStrOrDate);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1);
+  }
+  function monthLabel(k) {
+    var p = k.split('-');
+    return p[0] + ' 年 ' + (+p[1]) + ' 月';
+  }
+
+  function num(v) {
+    var n = parseFloat(String(v == null ? '' : v).replace(/[^\d.\-]/g, ''));
+    return isFinite(n) ? n : 0;
+  }
+  function money(n) {
+    var v = Math.round(num(n) * 100) / 100;
+    var abs = Math.abs(v);
+    var isInt = Math.abs(abs - Math.round(abs)) < 1e-9;
+    var s = abs.toLocaleString('zh-CN', {
+      minimumFractionDigits: isInt ? 0 : 2,
+      maximumFractionDigits: 2
+    });
+    return (v < 0 ? '-' : '') + s;
+  }
+
+  /** 三分类汇总：伙食 / 网购 / 其他（其他带明细） */
+  function summarize(records) {
+    var total = 0, meals = 0, online = 0, other = 0, detail = {}, n = 0;
+    (records || []).forEach(function (r) {
+      var a = num(r.amount);
+      if (!a) return;
+      total += a; n += 1;
+      if (r.cat === MEALS) meals += a;
+      else if (r.cat === ONLINE) online += a;
+      else {
+        other += a;
+        detail[r.cat] = (detail[r.cat] || 0) + a;
+      }
+    });
+    var otherDetail = Object.keys(detail).map(function (k) {
+      return { cat: k, amount: Math.round(detail[k] * 100) / 100 };
+    }).sort(function (x, y) { return y.amount - x.amount; });
+    return {
+      total: Math.round(total * 100) / 100,
+      meals: Math.round(meals * 100) / 100,
+      online: Math.round(online * 100) / 100,
+      other: Math.round(other * 100) / 100,
+      otherDetail: otherDetail, count: n
+    };
+  }
+
+  function inRange(r, from, to) {
+    return r.date >= from && r.date <= to;
+  }
+
+  function byDay(records) {
+    var map = {};
+    (records || []).forEach(function (r) {
+      var k = r.date;
+      (map[k] = map[k] || []).push(r);
+    });
+    return Object.keys(map).sort().reverse().map(function (k) {
+      var items = map[k].slice().sort(function (a, b) { return num(b.amount) - num(a.amount); });
+      var s = summarize(items);
+      return { date: k, weekday: weekday(k), items: items, total: s.total, count: items.length };
+    });
+  }
+
+  function listWeeks(records) {
+    var map = {};
+    (records || []).forEach(function (r) {
+      var k = weekStart(r.date);
+      map[k] = map[k] || [];
+      map[k].push(r);
+    });
+    return Object.keys(map).sort().reverse().map(function (k) {
+      var s = summarize(map[k]);
+      return { key: k, start: k, end: weekEnd(k), label: weekLabel(k), sum: s, count: map[k].length };
+    });
+  }
+
+  function listMonths(records) {
+    var map = {};
+    (records || []).forEach(function (r) {
+      var k = monthKey(r.date);
+      (map[k] = map[k] || []).push(r);
+    });
+    return Object.keys(map).sort().reverse().map(function (k) {
+      var s = summarize(map[k]);
+      return { key: k, label: monthLabel(k), sum: s, count: map[k].length };
+    });
+  }
+
+  function inMonth(records, key) {
+    return (records || []).filter(function (r) { return monthKey(r.date) === key; });
+  }
+  function inWeek(records, anyDate) {
+    var a = weekStart(anyDate), b = weekEnd(anyDate);
+    return (records || []).filter(function (r) { return r.date >= a && r.date <= b; });
+  }
+
+  function balance(incomes, expenses) {
+    var inc = 0, exp = 0;
+    (incomes || []).forEach(function (r) { inc += num(r.amount); });
+    (expenses || []).forEach(function (r) { exp += num(r.amount); });
+    return {
+      income: Math.round(inc * 100) / 100,
+      expense: Math.round(exp * 100) / 100,
+      savings: Math.round((inc - exp) * 100) / 100
+    };
+  }
+
+  root.MONEY = {
+    MEALS: MEALS, ONLINE: ONLINE,
+    pad: pad, todayStr: todayStr, dateStr: dateStr, weekday: weekday,
+    weekStart: weekStart, weekEnd: weekEnd, weekLabel: weekLabel,
+    monthKey: monthKey, monthLabel: monthLabel,
+    num: num, money: money,
+    summarize: summarize, byDay: byDay,
+    listWeeks: listWeeks, listMonths: listMonths,
+    inMonth: inMonth, inWeek: inWeek, balance: balance
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* sync.js —— 手机 ↔ 电脑 同步（ntfy 中转 + 本地 AES 加密）
+   · 不需要电脑开机、不需要账号、不依赖同一 Wi-Fi
+   · 内容加密后才发出去，topic 里只有密文
+*/
+(function (root) {
+  'use strict';
+
+  var NTFY = 'https://ntfy.sh';
+  var CODE_KEY = 'daylio-sync-code';
+  var TS_KEY = 'daylio-sync-ts';
+  var OUT_KEY = 'daylio-outbox';
+
+  var hasCrypto = (typeof crypto !== 'undefined' && crypto.subtle && typeof TextEncoder !== 'undefined');
+
+  function b64(buf) {
+    var b = new Uint8Array(buf), s = '';
+    for (var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+    return btoa(s);
+  }
+  function unb64(str) {
+    var s = atob(str), o = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) o[i] = s.charCodeAt(i);
+    return o;
+  }
+
+  function codeGet() {
+    try { return localStorage.getItem(CODE_KEY) || ''; } catch (e) { return ''; }
+  }
+  function codeSet(c) {
+    try { localStorage.setItem(CODE_KEY, c || ''); } catch (e) { }
+  }
+  function newCode() {
+    var abc = 'abcdefghjkmnpqrstuvwxyz23456789', out = '';
+    var r = new Uint8Array(8);
+    if (crypto.getRandomValues) crypto.getRandomValues(r);
+    else for (var i = 0; i < 8; i++) r[i] = Math.floor(Math.random() * 255);
+    for (var j = 0; j < 8; j++) out += abc[r[j] % abc.length];
+    return out;
+  }
+
+  /** topic 由同步码派生（不可逆），内容仍加密 */
+  function topicOf(code) {
+    if (!hasCrypto) return 'nana-dl-' + code;
+    var enc = new TextEncoder();
+    return crypto.subtle.digest('SHA-256', enc.encode('daylio-' + code)).then(function (h) {
+      return 'nana-dl-' + b64(h).replace(/[^A-Za-z0-9]/g, '').slice(0, 16).toLowerCase();
+    });
+  }
+
+  function keyOf(code) {
+    var enc = new TextEncoder();
+    return crypto.subtle.importKey('raw', enc.encode(code), 'PBKDF2', false, ['deriveKey'])
+      .then(function (base) {
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: enc.encode('daylio-sync'), iterations: 60000, hash: 'SHA-256' },
+          base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+      });
+  }
+
+  function seal(obj, code) {
+    var text = JSON.stringify(obj);
+    if (!hasCrypto) return Promise.resolve('P' + btoa(unescape(encodeURIComponent(text))));
+    return keyOf(code).then(function (k) {
+      var enc = new TextEncoder();
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      return crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k, enc.encode(text)).then(function (ct) {
+        return 'E' + b64(iv) + '.' + b64(ct);
+      });
+    });
+  }
+
+  function unseal(str, code) {
+    if (!str) return Promise.resolve(null);
+    if (str[0] === 'P') {
+      try { return Promise.resolve(JSON.parse(decodeURIComponent(escape(atob(str.slice(1)))))); } catch (e) { return Promise.resolve(null); }
+    }
+    if (str[0] !== 'E') return Promise.resolve(null);
+    if (!hasCrypto) return Promise.resolve(null);
+    var parts = str.slice(1).split('.');
+    return keyOf(code).then(function (k) {
+      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(parts[0]) }, k, unb64(parts[1]))
+        .then(function (buf) {
+          try { return JSON.parse(new TextDecoder().decode(buf)); } catch (e) { return null; }
+        }).catch(function () { return null; });
+    });
+  }
+
+  /* ---------- 待发队列：断网/超时都不丢 ---------- */
+  function outboxGet() {
+    try { return JSON.parse(localStorage.getItem(OUT_KEY) || '[]'); } catch (e) { return []; }
+  }
+  function outboxSet(list) {
+    try { localStorage.setItem(OUT_KEY, JSON.stringify(list.slice(-200))); } catch (e) { }
+  }
+  function outboxCount() { return outboxGet().length; }
+
+  function enqueue(dayKey, day) {
+    var list = outboxGet();
+    var found = false;
+    list.forEach(function (x) {
+      if (x.d === dayKey) { x.day = day; x.t = Date.now(); found = true; }
+    });
+    if (!found) list.push({ d: dayKey, day: day, t: Date.now() });
+    outboxSet(list);
+  }
+
+  function flushOutbox(code) {
+    var list = outboxGet();
+    if (!list.length) return Promise.resolve(0);
+    var done = 0;
+    var chain = Promise.resolve();
+    list.forEach(function (item) {
+      chain = chain.then(function () {
+        return publishRaw(code, item.d, item.day).then(function (ok) {
+          if (ok) {
+            done++;
+            var cur = outboxGet().filter(function (y) { return y.d !== item.d; });
+            outboxSet(cur);
+          }
+        }).catch(function () { });
+      });
+    });
+    return chain.then(function () { return done; });
+  }
+
+  function publishRaw(code, dayKey, day, kind) {
+    return topicOf(code).then(function (topic) {
+      return seal({ d: dayKey, day: day, kind: kind || 'day', t: Date.now() }, code).then(function (payload) {
+        return fetch(NTFY + '/' + topic, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain', 'Title': 'daylio', 'Priority': 'low' },
+          body: payload
+        }).then(function (r) { return r.ok; });
+      });
+    }).catch(function () { return false; });
+  }
+
+  /** 对外：先入队，再尝试立刻发；失败留在队列里等重试 */
+  function publishDay(code, dayKey, day) {
+    enqueue(dayKey, day);
+    return publishRaw(code, dayKey, day).then(function (ok) {
+      if (ok) {
+        var cur = outboxGet().filter(function (y) { return y.d !== dayKey; });
+        outboxSet(cur);
+      }
+      return ok;
+    });
+  }
+
+  /** 拉取比 since 新的消息 */
+  function pull(code, since) {
+    return topicOf(code).then(function (topic) {
+      var sinceQ = (since && since > 0) ? ('since=' + Math.floor(since / 1000)) : 'since=all';
+      var url = NTFY + '/' + topic + '/json?poll=1&' + sinceQ;
+      return fetch(url, { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (txt) {
+        var lines = txt.split('\n').filter(Boolean);
+        var out = [];
+        var chain = Promise.resolve();
+        lines.forEach(function (line) {
+          chain = chain.then(function () {
+            var msg;
+            try { msg = JSON.parse(line); } catch (e) { return; }
+            if (!msg || msg.event !== 'message' || !msg.message) return;
+            return unseal(msg.message, code).then(function (obj) {
+              if (obj && obj.d && obj.day) {
+                out.push(obj);
+                var ts = (msg.time || 0) * 1000;
+                if (ts > (since || 0)) since = ts;
+              }
+            });
+          });
+        });
+        return chain.then(function () { return { msgs: out, lastTs: since }; });
+      });
+    });
+  }
+
+  function lastTs() {
+    try { return parseInt(localStorage.getItem(TS_KEY) || '0', 10) || 0; } catch (e) { return 0; }
+  }
+  function setLastTs(t) {
+    try { localStorage.setItem(TS_KEY, String(t || 0)); } catch (e) { }
+  }
+
+  root.SYNC = {
+    codeGet: codeGet, codeSet: codeSet, newCode: newCode,
+    publishDay: publishDay, flushOutbox: flushOutbox, outboxCount: outboxCount,
+    pull: pull, lastTs: lastTs, setLastTs: setLastTs,
+    hasCrypto: hasCrypto
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* app.js —— 呐呐财记：总览 / 支出 / 收入 */
+(function () {
+  'use strict';
+
+  var M = window.MONEY;
+  var STORE_KEY = 'nana-money-v1';
+  var SERVER = (typeof location !== 'undefined' && location.protocol === 'http:') ? '' : null;
+  var serverInfo = null, posting = false, pendingPayload = null, serverOK = null;
+  var saveTimer = null;
+
+  var state = null;
+  var syncCode = '', syncBusy = false, syncStatus = '', syncFail = 0, retryTimer = null;
+
+  function hhmm() {
+    var d = new Date();
+    return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+  }
+
+  // 发布某一天的收支（按天替换，删除也能同步）
+  function syncPublish(date) {
+    if (!syncCode || !window.SYNC) return;
+    var exp = state.expenses.filter(function (r) { return r.date === date; });
+    var inc = state.incomes.filter(function (r) { return r.date === date; });
+    SYNC.publishDay(syncCode, date, { exp: exp, inc: inc }).then(function (ok) {
+      if (ok) { syncStatus = '已同步 ' + hhmm(); syncFail = 0; }
+      else { syncFail++; scheduleRetry(); }
+      if (state.ui.tab === 'data') render();
+    }).catch(function () { syncFail++; scheduleRetry(); });
+  }
+
+  function syncPull(silent) {
+    if (!syncCode || !window.SYNC || syncBusy) return;
+    syncBusy = true;
+    SYNC.pull(syncCode, SYNC.lastTs()).then(function (res) {
+      syncBusy = false;
+      if (!res || !res.msgs.length) { SYNC.setLastTs(res ? res.lastTs : SYNC.lastTs()); return; }
+      var changed = false;
+      res.msgs.forEach(function (m) {
+        var d = m.d;
+        var exp = (m.day.exp || []), inc = (m.day.inc || []);
+        var keptE = state.expenses.filter(function (r) { return r.date !== d; });
+        var keptI = state.incomes.filter(function (r) { return r.date !== d; });
+        if (JSON.stringify(keptE.length + keptI.length) !== '' ) {
+          state.expenses = keptE.concat(exp);
+          state.incomes = keptI.concat(inc);
+          changed = true;
+        }
+      });
+      SYNC.setLastTs(res.lastTs);
+      state.meta.updatedAt = new Date().toISOString();
+      if (changed) { saveLocalOnly(); syncStatus = '收到更新 ' + hhmm(); if (!silent) render(); }
+    }).catch(function () { syncBusy = false; });
+  }
+
+  function scheduleRetry() {
+    if (retryTimer || !syncCode) return;
+    var delay = Math.min(30000, 3000 * Math.pow(1.6, Math.min(syncFail, 5)));
+    retryTimer = setTimeout(function () {
+      retryTimer = null;
+      if (!syncCode) return;
+      SYNC.flushOutbox(syncCode).then(function (n) {
+        if (n > 0) { syncStatus = '补发成功 ' + hhmm(); syncFail = 0; }
+        if (SYNC.outboxCount() > 0) scheduleRetry();
+      });
+    }, delay);
+  }
+
+  function syncPublishAllRecent() {
+    if (!syncCode) return;
+    var dates = {};
+    state.expenses.concat(state.incomes).forEach(function (r) { dates[r.date] = 1; });
+    Object.keys(dates).sort().slice(-14).forEach(function (d, i) {
+      setTimeout(function () { syncPublish(d); }, i * 350);
+    });
+  }
+
+  /* ================= 存储 ================= */
+  function defaultState() {
+    return {
+      version: 1,
+      meta: { createdAt: new Date().toISOString(), updatedAt: '' },
+      expenses: [],
+      incomes: [],
+      cats: { expense: ['伙食', '网购'], income: ['善良夫妻的施舍'] },
+      ui: { tab: 'overview', date: M.todayStr() }
+    };
+  }
+
+  function merge(s) {
+    var d = defaultState();
+    s = s || {};
+    s.version = 1;
+    s.meta = Object.assign(d.meta, s.meta || {});
+    s.expenses = Array.isArray(s.expenses) ? s.expenses : [];
+    s.incomes = Array.isArray(s.incomes) ? s.incomes : [];
+    s.cats = s.cats || d.cats;
+    s.cats.expense = Array.isArray(s.cats.expense) && s.cats.expense.length ? s.cats.expense : d.cats.expense;
+    s.cats.income = Array.isArray(s.cats.income) && s.cats.income.length ? s.cats.income : d.cats.income;
+    s.ui = Object.assign(d.ui, s.ui || {});
+    return s;
+  }
+
+  function serverGet(path) {
+    try {
+      var x = new XMLHttpRequest();
+      x.open('GET', path, false);
+      x.send(null);
+      return x.status === 200 ? x.responseText : null;
+    } catch (e) { return null; }
+  }
+  function serverInfoFetch() {
+    try {
+      var x = new XMLHttpRequest();
+      x.open('GET', '/api/info', true);
+      x.onload = function () {
+        if (x.status === 200) { try { serverInfo = JSON.parse(x.responseText); render(); } catch (e) { } }
+      };
+      x.send(null);
+    } catch (e) { }
+  }
+  // 立即写盘：不等定时器；若上一次还没写完，就把最新内容排队，写完立刻接着写
+  var posting = false, pendingPayload = null;
+
+  function serverSave(json) {
+    pendingPayload = json;
+    if (posting) return;
+    flushToServer();
+  }
+
+  function flushToServer() {
+    if (pendingPayload == null) return;
+    var body = pendingPayload;
+    pendingPayload = null;
+    posting = true;
+    var done = false, watch = null;
+
+    function finish(ok, note) {
+      if (done) return;
+      done = true;
+      if (watch) clearTimeout(watch);
+      posting = false;
+      serverOK = ok;
+      if (note) flag(note);
+      if (pendingPayload != null) flushToServer();   // 刚才又改了，立刻接着写
+    }
+
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/data', true);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+      xhr.onload = function () {
+        finish(xhr.status === 200, xhr.status === 200 ? '' : '⚠ 写文件失败，已存浏览器副本');
+      };
+      xhr.onerror = function () { finish(false, '⚠ 服务断开，已存浏览器副本'); };
+      xhr.send(body);
+      // 看门狗：2.5 秒没回应就放行，避免卡住后续保存
+      watch = setTimeout(function () {
+        try { xhr.abort(); } catch (e) { }
+        finish(false, '');
+      }, 2500);
+    } catch (e) { posting = false; serverOK = false; }
+  }
+
+  var state = null;
+  var syncCode = '', syncBusy = false, syncStatus = '', syncFail = 0, retryTimer = null;
+
+  function hhmm() {
+    var d = new Date();
+    return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+  }
+
+  // 发布某一天的收支（按天替换，删除也能同步）
+  function syncPublish(date) {
+    if (!syncCode || !window.SYNC) return;
+    var exp = state.expenses.filter(function (r) { return r.date === date; });
+    var inc = state.incomes.filter(function (r) { return r.date === date; });
+    SYNC.publishDay(syncCode, date, { exp: exp, inc: inc }).then(function (ok) {
+      if (ok) { syncStatus = '已同步 ' + hhmm(); syncFail = 0; }
+      else { syncFail++; scheduleRetry(); }
+      if (state.ui.tab === 'data') render();
+    }).catch(function () { syncFail++; scheduleRetry(); });
+  }
+
+  function syncPull(silent) {
+    if (!syncCode || !window.SYNC || syncBusy) return;
+    syncBusy = true;
+    SYNC.pull(syncCode, SYNC.lastTs()).then(function (res) {
+      syncBusy = false;
+      if (!res || !res.msgs.length) { SYNC.setLastTs(res ? res.lastTs : SYNC.lastTs()); return; }
+      var changed = false;
+      res.msgs.forEach(function (m) {
+        var d = m.d;
+        var exp = (m.day.exp || []), inc = (m.day.inc || []);
+        var keptE = state.expenses.filter(function (r) { return r.date !== d; });
+        var keptI = state.incomes.filter(function (r) { return r.date !== d; });
+        if (JSON.stringify(keptE.length + keptI.length) !== '' ) {
+          state.expenses = keptE.concat(exp);
+          state.incomes = keptI.concat(inc);
+          changed = true;
+        }
+      });
+      SYNC.setLastTs(res.lastTs);
+      state.meta.updatedAt = new Date().toISOString();
+      if (changed) { saveLocalOnly(); syncStatus = '收到更新 ' + hhmm(); if (!silent) render(); }
+    }).catch(function () { syncBusy = false; });
+  }
+
+  function scheduleRetry() {
+    if (retryTimer || !syncCode) return;
+    var delay = Math.min(30000, 3000 * Math.pow(1.6, Math.min(syncFail, 5)));
+    retryTimer = setTimeout(function () {
+      retryTimer = null;
+      if (!syncCode) return;
+      SYNC.flushOutbox(syncCode).then(function (n) {
+        if (n > 0) { syncStatus = '补发成功 ' + hhmm(); syncFail = 0; }
+        if (SYNC.outboxCount() > 0) scheduleRetry();
+      });
+    }, delay);
+  }
+
+  function syncPublishAllRecent() {
+    if (!syncCode) return;
+    var dates = {};
+    state.expenses.concat(state.incomes).forEach(function (r) { dates[r.date] = 1; });
+    Object.keys(dates).sort().slice(-14).forEach(function (d, i) {
+      setTimeout(function () { syncPublish(d); }, i * 350);
+    });
+  }
+
+  /* ================= 存储 ================= */
+  function defaultState() {
+    return {
+      version: 1,
+      meta: { createdAt: new Date().toISOString(), updatedAt: '' },
+      expenses: [],
+      incomes: [],
+      cats: { expense: ['伙食', '网购'], income: ['善良夫妻的施舍'] },
+      ui: { tab: 'overview', date: M.todayStr() }
+    };
+  }
+
+  function merge(s) {
+    var d = defaultState();
+    s = s || {};
+    s.version = 1;
+    s.meta = Object.assign(d.meta, s.meta || {});
+    s.expenses = Array.isArray(s.expenses) ? s.expenses : [];
+    s.incomes = Array.isArray(s.incomes) ? s.incomes : [];
+    s.cats = s.cats || d.cats;
+    s.cats.expense = Array.isArray(s.cats.expense) && s.cats.expense.length ? s.cats.expense : d.cats.expense;
+    s.cats.income = Array.isArray(s.cats.income) && s.cats.income.length ? s.cats.income : d.cats.income;
+    s.ui = Object.assign(d.ui, s.ui || {});
+    return s;
+  }
+
+  function serverGet(path) {
+    try {
+      var x = new XMLHttpRequest();
+      x.open('GET', path, false);
+      x.send(null);
+      return x.status === 200 ? x.responseText : null;
+    } catch (e) { return null; }
+  }
+  function serverInfoFetch() {
+    try {
+      var x = new XMLHttpRequest();
+      x.open('GET', '/api/info', true);
+      x.onload = function () {
+        if (x.status === 200) { try { serverInfo = JSON.parse(x.responseText); render(); } catch (e) { } }
+      };
+      x.send(null);
+    } catch (e) { }
+  }
+  // 立即写盘：不等定时器；若上一次还没写完，就把最新内容排队，写完立刻接着写
+  var posting = false, pendingPayload = null;
+
+  function serverSave(json) {
+    pendingPayload = json;
+    if (posting) return;
+    flushToServer();
+  }
+
+  function flushToServer() {
+    if (pendingPayload == null) return;
+    var body = pendingPayload;
+    pendingPayload = null;
+    posting = true;
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/data', true);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+      xhr.onload = function () {
+        posting = false;
+        serverOK = (xhr.status === 200);
+        if (!serverOK) flag('⚠ 写文件失败，已存浏览器副本');
+        if (pendingPayload != null) flushToServer();
+      };
+      xhr.onerror = function () {
+        posting = false; serverOK = false;
+        flag('⚠ 服务断开，已存浏览器副本');
+        if (pendingPayload != null) flushToServer();
+      };
+      xhr.send(body);
+    } catch (e) { posting = false; serverOK = false; }
+  }
+
+  function load() {
+    if (SERVER !== null) {
+      var raw = serverGet('/api/data');
+      if (raw) { try { return merge(JSON.parse(raw)); } catch (e) { } }
+    }
+    try {
+      var s = localStorage.getItem(STORE_KEY);
+      if (s) return merge(JSON.parse(s));
+    } catch (e) { }
+    return defaultState();
+  }
+
+  function saveLocalOnly() {
+    var json = JSON.stringify(state);
+    try { localStorage.setItem(STORE_KEY, json); } catch (e) { }
+    if (SERVER !== null) serverSave(json);
+  }
+
+  function save(publishDate) {
+    state.meta.updatedAt = new Date().toISOString();
+    var json = JSON.stringify(state);
+    try { localStorage.setItem(STORE_KEY, json); } catch (e) { }
+    if (SERVER !== null) serverSave(json);
+    if (publishDate && syncCode) syncPublish(publishDate);
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { flag('已' + (SERVER !== null ? '写入' : '保存')); }, 60);
+  }
+
+  var flagTimer = null;
+  function flag(t) {
+    var el = document.getElementById('save-flag');
+    if (!el) return;
+    el.textContent = t;
+    el.classList.add('show');
+    if (flagTimer) clearTimeout(flagTimer);
+    flagTimer = setTimeout(function () { el.classList.remove('show'); }, 1400);
+  }
+
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ================= 侧栏 ================= */
+  function renderSidebar() {
+    var b = M.balance(state.incomes, state.expenses);
+    var month = M.monthKey(M.todayStr());
+    var me = M.summarize(M.inMonth(state.expenses, month));
+    var mi = M.inMonth(state.incomes, month).reduce(function (a, r) { return a + M.num(r.amount); }, 0);
+
+    var html = '';
+    html += '<div class="brand">' + logo() +
+      '<div><div class="brand-name">呐呐财记</div><div class="brand-sub">NANA · MONEY</div></div></div>';
+
+    html += '<div class="money-box">' +
+      '<div class="money-label">总存款</div>' +
+      '<div class="money-value">' + M.money(b.savings) + '<small> 元</small></div>' +
+      '<div class="money-sub">本月收 ' + M.money(mi) + ' · 支 ' + M.money(me.total) + '</div>' +
+      '</div>';
+
+    var nExp = me.total ? '−' + M.money(me.total) : '';
+    var nInc = mi ? '+' + M.money(mi) : '';
+    html += '<div class="nav">' +
+      navBtn('overview', '☁', '总览', b.savings ? M.money(b.savings) : '') +
+      navBtn('expense', '◍', '支出', nExp) +
+      navBtn('income', '✿', '收入', nInc) +
+      navBtn('data', '⚙', '数据', '') +
+      '</div>';
+
+    html += '<div class="side-foot">' +
+      (SERVER !== null ? '数据自动存到本机文件' : '数据存在这台电脑的浏览器里') +
+      '<br>' + (state.meta.updatedAt ? '上次保存 ' + shortTime(state.meta.updatedAt) : '还没有记录') +
+      '</div>';
+
+    document.getElementById('sidebar').innerHTML = html;
+  }
+
+  function navBtn(id, ico, label, sum) {
+    return '<button class="nav-item' + (state.ui.tab === id ? ' active' : '') + '" data-act="tab" data-v="' + id + '">' +
+      '<span class="ico">' + ico + '</span><span>' + label + '</span>' +
+      (sum ? '<span class="sum">' + esc(sum) + '</span>' : '') + '</button>';
+  }
+
+  function shortTime(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '—';
+    var now = new Date();
+    var same = d.toDateString() === now.toDateString();
+    var hm = M.pad(d.getHours()) + ':' + M.pad(d.getMinutes());
+    return same ? hm : (d.getMonth() + 1) + '/' + d.getDate() + ' ' + hm;
+  }
+
+  function logo() {
+    return '<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      '<circle cx="24" cy="24" r="21" fill="var(--rose-soft)"/>' +
+      '<circle cx="24" cy="24" r="15.5" fill="var(--card)" stroke="var(--line)" stroke-width="1.2"/>' +
+      '<path d="M16 30c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="var(--rose)" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<circle cx="21" cy="19" r="1.7" fill="var(--rose)"/><circle cx="27" cy="19" r="1.7" fill="var(--rose)"/>' +
+      '<path d="M20.5 34h7" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round"/>' +
+      '</svg>';
+  }
+
+  /* ================= 总览 ================= */
+  function renderOverview() {
+    var b = M.balance(state.incomes, state.expenses);
+    var mKey = M.monthKey(M.todayStr());
+    var mExp = M.summarize(M.inMonth(state.expenses, mKey));
+    var mInc = M.inMonth(state.incomes, mKey).reduce(function (a, r) { return a + M.num(r.amount); }, 0);
+    var mLeft = Math.round((mInc - mExp.total) * 100) / 100;
+    var pct = Math.max(mExp.total, mInc) > 0 ? Math.round(mExp.total / Math.max(mExp.total, mInc) * 100) : 0;
+
+    var h = '';
+    h += '<div class="page-head"><div><div class="page-title">总览</div>' +
+      '<div class="page-sub">总存款＝所有收入 − 所有支出</div></div>' +
+      '<div class="page-quote">钱要花在让自己变好的地方，其余的慢慢攒。</div></div>';
+
+    h += '<div class="card hero">' +
+      '<div class="k">我的总存款</div>' +
+      '<div class="v">' + M.money(b.savings) + '<small> 元</small></div>' +
+      '<div class="row">' +
+      '<div>累计收入 <b>' + M.money(b.income) + '</b> 元</div>' +
+      '<div>累计支出 <b>' + M.money(b.expense) + '</b> 元</div>' +
+      '<div>记录 <b>' + (state.expenses.length + state.incomes.length) + '</b> 笔</div>' +
+      '</div></div>';
+
+    h += '<div class="grid g3">' +
+      '<div class="stat"><div class="k">本月收入</div><div class="v">' + M.money(mInc) + '<em> 元</em></div></div>' +
+      '<div class="stat"><div class="k">本月支出</div><div class="v">' + M.money(mExp.total) + '<em> 元</em></div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div></div>' +
+      '<div class="stat sage"><div class="k">本月结余</div><div class="v">' + M.money(mLeft) + '<em> 元</em></div></div>' +
+      '</div>';
+
+    // 本月支出构成
+    h += '<div class="card sum-card"><div class="card-title">本月支出构成<span class="tag">' + M.monthLabel(mKey) + '</span></div>' +
+      '<div class="card-desc">只有三块：伙食、网购，其余都算「其他」。</div>' +
+      threeBuckets(mExp, 'm') + '</div>';
+
+    // 最近记录
+    var recent = state.expenses.map(function (r) { return Object.assign({ kind: 'expense' }, r); })
+      .concat(state.incomes.map(function (r) { return Object.assign({ kind: 'income' }, r); }))
+      .sort(function (a, b) { return (b.date + b.id) > (a.date + a.id) ? 1 : -1; })
+      .slice(0, 6);
+
+    h += '<div class="card"><div class="card-title">最近几笔</div>' +
+      (recent.length ? recent.map(function (r) {
+        return '<div class="rec"><span class="cat">' + esc(r.cat) + '</span>' +
+          '<span class="note">' + esc(r.note || '') + '</span>' +
+          '<span class="hint">' + esc(r.date.slice(5)) + '</span>' +
+          '<span class="amt" style="color:' + (r.kind === 'income' ? 'var(--sage)' : 'var(--rose-deep)') + '">' +
+          (r.kind === 'income' ? '+' : '−') + M.money(r.amount) + '</span></div>';
+      }).join('') : '<div class="empty">还没有记录。去「支出」记第一笔吧。</div>') +
+      '</div>';
+
+    return h;
+  }
+
+  function threeBuckets(sum, scope) {
+    var t = Math.max(sum.total, 0.0001);
+    var h = '<div class="three">' +
+      bucket('伙食', sum.meals, t, 'rose', scope) +
+      bucket('网购', sum.online, t, 'gold', scope) +
+      bucketOther(sum, t, scope) +
+      '</div>';
+    h += '<div class="total-line"><span>' + (scope === 'm' ? '本月合计' : scope === 'w' ? '本周合计' : '合计') + '</span><b>' + M.money(sum.total) + ' 元</b></div>';
+    return h;
+  }
+
+  function bucket(name, val, total, cls, scope) {
+    return '<div class="bucket"><div class="k">' + name + '</div>' +
+      '<div class="v">' + M.money(val) + '</div>' +
+      '<div class="bar" style="height:4px;background:var(--line-2);border-radius:99px;margin-top:6px;overflow:hidden">' +
+      '<i style="display:block;height:100%;width:' + Math.round(val / total * 100) + '%;background:var(--' + cls + ')"></i></div>' +
+      '<div class="hint" style="margin-top:4px">' + Math.round(val / total * 100) + '%</div></div>';
+  }
+
+  function bucketOther(sum, total, scope) {
+    var open = isOpen('other:' + scope);
+    return '<div class="bucket other" data-act="toggle" data-v="other:' + scope + '">' +
+      '<div class="k">其他' + (sum.otherDetail.length ? ' <span class="more">' + sum.otherDetail.length + ' 类 · 点开看</span>' : '') + '</div>' +
+      '<div class="v">' + M.money(sum.other) + '</div>' +
+      '<div class="bar" style="height:4px;background:var(--line-2);border-radius:99px;margin-top:6px;overflow:hidden">' +
+      '<i style="display:block;height:100%;width:' + Math.round(sum.other / total * 100) + '%;background:var(--sage)"></i></div>' +
+      '<div class="hint" style="margin-top:4px">' + Math.round(sum.other / total * 100) + '%</div>' +
+      (open && sum.otherDetail.length ? '<div class="other-detail">' + sum.otherDetail.map(function (d) {
+        return '<div class="row"><span>' + esc(d.cat) + '</span><span class="n">' + M.money(d.amount) + ' 元</span></div>';
+      }).join('') + '</div>' : '') +
+      '</div>';
+  }
+
+  /* ================= 支出 ================= */
+  function renderExpense() {
+    var date = state.ui.date || M.todayStr();
+    var dayRecs = state.expenses.filter(function (r) { return r.date === date; });
+    var daySum = M.summarize(dayRecs);
+
+    var h = '';
+    h += '<div class="page-head"><div><div class="page-title">支出</div>' +
+      '<div class="page-sub">一天一笔一笔地记，月末就不慌了。</div></div></div>';
+
+    // 日期条
+    h += '<div class="datebar">' +
+      '<button class="icon-btn" data-act="day-move" data-v="-1">‹</button>' +
+      '<div><div class="big">' + fmtDate(date) + '</div>' +
+      '<div class="wd">' + M.weekday(date) + '　·　今日已记 ' + daySum.count + ' 笔 ¥' + M.money(daySum.total) + '</div></div>' +
+      '<button class="icon-btn" data-act="day-move" data-v="1">›</button>' +
+      '<input class="inp" type="date" value="' + date + '" data-field="date" style="width:150px">' +
+      '<button class="btn ghost sm" data-act="day-today">今天</button>' +
+      '</div>';
+
+    // 记一笔
+    h += '<div class="card"><div class="card-title">记一笔</div>' +
+      '<div class="add-row"><div class="chips">' +
+      state.cats.expense.map(function (c) {
+        return '<button class="chip' + (state.ui.cat === c ? ' on' : '') + '" data-act="pick-cat" data-v="' + esc(c) + '">' + esc(c) + '</button>';
+      }).join('') +
+      '<button class="chip add" data-act="new-cat">＋ 新分类</button>' +
+      '</div></div>' +
+      '<div class="add-row">' +
+      '<input class="inp" id="amt" type="number" step="0.01" min="0" placeholder="金额" style="width:110px">' +
+      '<input class="inp" id="note" placeholder="备注（可选，比如：午饭 / 袜子）" style="flex:1;min-width:160px">' +
+      '<button class="btn" data-act="add-expense">记下</button>' +
+      '</div></div>';
+
+    // 当天明细
+    h += '<div class="card"><div class="card-title">' + fmtDate(date) + ' · ' + M.weekday(date) + ' 的账' +
+      '<span class="tag">合计 ¥' + M.money(daySum.total) + '</span></div>' +
+      (dayRecs.length ? dayRecs.slice().sort(function (a, b) { return M.num(b.amount) - M.num(a.amount); }).map(function (r) {
+        return recRow(r, 'expense');
+      }).join('') : '<div class="empty">这天还没有支出。上面记一笔试试？</div>') +
+      '</div>';
+
+    // 本周 / 本月
+    var today = M.todayStr();
+    var wSum = M.summarize(M.inWeek(state.expenses, today));
+    var mSum = M.summarize(M.inMonth(state.expenses, M.monthKey(today)));
+
+    h += '<div class="card sum-card"><div class="card-title">本周汇总<span class="tag">' + M.weekLabel(today) + '</span></div>' +
+      threeBuckets(wSum, 'w') + '</div>';
+
+    h += '<div class="card sum-card"><div class="card-title">本月汇总<span class="tag">' + M.monthLabel(M.monthKey(today)) + '</span></div>' +
+      threeBuckets(mSum, 'm') + '</div>';
+
+    // 历史
+    var weeks = M.listWeeks(state.expenses);
+    var months = M.listMonths(state.expenses);
+    h += '<div class="card"><div class="card-title">往期汇总' +
+      '<span class="tag">' + weeks.length + ' 周 · ' + months.length + ' 月</span></div>' +
+      '<div class="card-desc">点一下展开，看这一周 / 这一个月花了什么。</div>';
+
+    var wkOpen = isOpen('hist-w');
+    h += '<div class="period' + (wkOpen ? ' open' : '') + '">' +
+      '<div class="period-head" data-act="toggle" data-v="hist-w"><span class="l">按周看</span>' +
+      '<span class="c">' + weeks.length + ' 周</span></div>' +
+      '<div class="period-body">' + (weeks.length ? weeks.map(function (w) {
+        var open = isOpen('wk:' + w.key);
+        return '<div class="period' + (open ? ' open' : '') + '" style="margin-top:8px">' +
+          '<div class="period-head" data-act="toggle" data-v="wk:' + w.key + '">' +
+          '<span class="l">' + w.label + '</span><span class="c">' + w.count + ' 笔</span>' +
+          '<span class="t">' + M.money(w.sum.total) + '</span></div>' +
+          '<div class="period-body">' + threeBuckets(w.sum, 'wk:' + w.key) + '</div></div>';
+      }).join('') : '<div class="empty">还没有数据。</div>') + '</div></div>';
+
+    var mOpen = isOpen('hist-m');
+    h += '<div class="period' + (mOpen ? ' open' : '') + '">' +
+      '<div class="period-head" data-act="toggle" data-v="hist-m"><span class="l">按月看</span>' +
+      '<span class="c">' + months.length + ' 月</span></div>' +
+      '<div class="period-body">' + (months.length ? months.map(function (mo) {
+        var open = isOpen('mo:' + mo.key);
+        return '<div class="period' + (open ? ' open' : '') + '" style="margin-top:8px">' +
+          '<div class="period-head" data-act="toggle" data-v="mo:' + mo.key + '">' +
+          '<span class="l">' + mo.label + '</span><span class="c">' + mo.count + ' 笔</span>' +
+          '<span class="t">' + M.money(mo.sum.total) + '</span></div>' +
+          '<div class="period-body">' + threeBuckets(mo.sum, 'mo:' + mo.key) + '</div></div>';
+      }).join('') : '<div class="empty">还没有数据。</div>') + '</div></div>';
+
+    h += '</div>';
+    return h;
+  }
+
+  /* ================= 收入 ================= */
+  function renderIncome() {
+    var total = state.incomes.reduce(function (a, r) { return a + M.num(r.amount); }, 0);
+    var month = M.monthKey(M.todayStr());
+    var mTotal = state.incomes.filter(function (r) { return M.monthKey(r.date) === month; })
+      .reduce(function (a, r) { return a + M.num(r.amount); }, 0);
+
+    var h = '';
+    h += '<div class="page-head"><div><div class="page-title">收入</div>' +
+      '<div class="page-sub">进来的钱，记清楚就好。</div></div></div>';
+
+    h += '<div class="card"><div class="card-title">记一笔收入</div>' +
+      '<div class="add-row">' +
+      '<input class="inp" id="inc-date" type="date" value="' + M.todayStr() + '" style="width:150px">' +
+      '<div class="chips">' + state.cats.income.map(function (c) {
+        return '<button class="chip' + (state.ui.incCat === c ? ' on' : '') + '" data-act="pick-incat" data-v="' + esc(c) + '">' + esc(c) + '</button>';
+      }).join('') + '<button class="chip add" data-act="new-incat">＋ 新分类</button></div>' +
+      '</div>' +
+      '<div class="add-row">' +
+      '<input class="inp" id="inc-amt" type="number" step="0.01" min="0" placeholder="金额" style="width:110px">' +
+      '<input class="inp" id="inc-note" placeholder="备注（可选）" style="flex:1;min-width:160px">' +
+      '<button class="btn" data-act="add-income">记下</button>' +
+      '</div>' +
+      '<div class="hint">日期可以改成任意一天，补记也没问题。</div></div>';
+
+    h += '<div class="grid g2">' +
+      '<div class="stat"><div class="k">累计收入</div><div class="v">' + M.money(total) + '<em> 元</em></div></div>' +
+      '<div class="stat sage"><div class="k">本月收入</div><div class="v">' + M.money(mTotal) + '<em> 元</em></div></div>' +
+      '</div>';
+
+    var months = {};
+    state.incomes.forEach(function (r) { (months[M.monthKey(r.date)] = months[M.monthKey(r.date)] || []).push(r); });
+    var keys = Object.keys(months).sort().reverse();
+
+    h += '<div class="card"><div class="card-title">收入明细<span class="tag">' + state.incomes.length + ' 笔</span></div>' +
+      (keys.length ? keys.map(function (k) {
+        var list = months[k].slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+        var sum = list.reduce(function (a, r) { return a + M.num(r.amount); }, 0);
+        var open = isOpen('inc:' + k) || keys[0] === k;
+        return '<div class="period' + (open ? ' open' : '') + '" style="margin-top:10px">' +
+          '<div class="period-head" data-act="toggle" data-v="inc:' + k + '">' +
+          '<span class="l">' + M.monthLabel(k) + '</span><span class="c">' + list.length + ' 笔</span>' +
+          '<span class="t">+' + M.money(sum) + '</span></div>' +
+          '<div class="period-body">' + list.map(function (r) { return recRow(r, 'income'); }).join('') + '</div></div>';
+      }).join('') : '<div class="empty">还没有收入记录。第一笔写「善良夫妻的施舍」吧。</div>') +
+      '</div>';
+    return h;
+  }
+
+  function recRow(r, kind) {
+    return '<div class="rec">' +
+      '<span class="cat">' + esc(r.cat) + '</span>' +
+      '<input class="inp" type="date" value="' + esc(r.date) + '" data-field="rec-date" data-id="' + r.id + '" data-kind="' + kind + '" style="width:132px;padding:3px 6px;font-size:12px">' +
+      (r.note ? '<span class="note">' + esc(r.note) + '</span>' : '<span class="note"></span>') +
+      '<span class="amt" style="color:' + (kind === 'income' ? 'var(--sage)' : 'var(--rose-deep)') + '">' +
+      (kind === 'income' ? '+' : '−') + M.money(r.amount) + '</span>' +
+      '<button class="del" data-act="del" data-v="' + r.id + '" data-kind="' + kind + '" title="删除">×</button>' +
+      '</div>';
+  }
+
+  /* ================= 数据 ================= */
+  function renderData() {
+    var info = '';
+    if (SERVER !== null) {
+      info = '<table class="tbl" style="width:100%;font-size:13px"><tbody>' +
+        '<tr><td style="width:34%;color:var(--muted)">保存方式</td><td>硬盘文件（自动）' +
+        (serverOK === false ? '<span style="color:#B25A4C"> 最近一次写入失败</span>' : '') + '</td></tr>' +
+        '<tr><td style="color:var(--muted)">数据文件</td><td style="word-break:break-all">' +
+        esc(serverInfo && serverInfo.file ? serverInfo.file : '…\\NaNaCaiJi\\data\\财记数据.json') + '</td></tr>' +
+        '<tr><td style="color:var(--muted)">最近保存</td><td>' + (state.meta.updatedAt ? new Date(state.meta.updatedAt).toLocaleString('zh-CN', { hour12: false }) : '—') + '</td></tr>' +
+        '</tbody></table>';
+    } else {
+      info = '<div class="hint">数据存在这台电脑的浏览器里，每次修改立即保存。想要直接存成文件，请用桌面图标启动。</div>';
+    }
+
+    var themes = [['matcha', '抹茶奶绿', 'm'], ['blue', '雾霾蓝', 'b'], ['lilac', '藕粉紫', 'l']];
+    var cur = state.ui.theme || 'matcha';
+
+    var syncCard = '<div class="card"><div class="card-title">手机 ↔ 电脑同步<span class="tag">不用电脑开机</span></div>' +
+      '<div class="card-desc">手机上记的账，电脑打开后自动合并；电脑关机也能记。</div>' +
+      (syncCode
+        ? ('<div class="ent" style="padding:10px 2px"><span class="txt" style="font-size:16px;font-weight:700;letter-spacing:.12em">' + esc(syncCode) +
+           '</span><button class="btn ghost sm" data-act="sync" data-v="copy">复制</button></div>' +
+           '<div class="btn-group" style="margin-top:8px">' +
+           '<button class="btn ghost sm" data-act="sync" data-v="now">立即同步</button>' +
+           '<button class="btn ghost sm" data-act="sync" data-v="push">重发本机</button>' +
+           '<button class="btn danger sm" data-act="sync" data-v="off">断开</button></div>' +
+           '<div class="hint" style="margin-top:8px">' + (syncStatus || '已开启，每 9 秒自动检查') +
+           (window.SYNC && SYNC.outboxCount && SYNC.outboxCount() ? ' · 待发 ' + SYNC.outboxCount() + ' 条' : '') + '</div>')
+        : ('<div class="btn-group"><button class="btn" data-act="sync" data-v="new">生成同步码</button></div>' +
+           '<div class="ent" style="margin-top:10px;padding:0"><input class="inp" id="sync-in" placeholder="或粘贴另一台设备的同步码"><button class="btn ghost sm" data-act="sync" data-v="join">使用</button></div>')) +
+      '</div>';
+
+    return '<div class="page-head"><div><div class="page-title">数据</div>' +
+      '<div class="page-sub">同步、配色、导出、导入、清空</div></div></div>' + syncCard +
+      '<div class="card"><div class="card-title">配色</div>' +
+      '<div class="card-desc">换一个顺眼的，数字也会温和一点。</div>' +
+      '<div class="themes">' + themes.map(function (t) {
+        return '<button class="theme-dot' + (cur === t[0] ? ' on' : '') + '" data-act="theme" data-v="' + t[0] + '">' +
+          '<i class="' + t[2] + '"></i>' + t[1] + '</button>';
+      }).join('') + '</div></div>' +
+      '<div class="card"><div class="card-title">存储</div>' + info + '</div>' +
+      '<div class="card"><div class="card-title">备份与恢复</div>' +
+      '<div class="card-desc">导出一个 .json 文件，换电脑时可以带过去。</div>' +
+      '<div class="btn-group">' +
+      '<button class="btn" data-act="export">导出备份</button>' +
+      '<button class="btn ghost" data-act="import">导入备份</button>' +
+      '<button class="btn danger" data-act="clear">清空全部记录</button>' +
+      '</div>' +
+      '<input type="file" id="file-in" accept=".json" style="display:none">' +
+      '</div>';
+  }
+
+  /* ================= 渲染 ================= */
+  function isOpen(k) { return !!(state.ui.open && state.ui.open[k]); }
+  function toggle(k) {
+    state.ui.open = state.ui.open || {};
+    state.ui.open[k] = !state.ui.open[k];
+    save(); render();
+  }
+
+  function fmtDate(d) {
+    var x = new Date(d + 'T00:00:00');
+    return x.getFullYear() + ' 年 ' + (x.getMonth() + 1) + ' 月 ' + x.getDate() + ' 日';
+  }
+
+  function applyTheme() {
+    var t = state.ui.theme || 'matcha';
+    document.body.className = t === 'matcha' ? '' : 'theme-' + t;
+  }
+
+  function render() {
+    applyTheme();
+    renderSidebar();
+    var main = document.getElementById('main');
+    if (state.ui.tab === 'expense') main.innerHTML = renderExpense();
+    else if (state.ui.tab === 'income') main.innerHTML = renderIncome();
+    else if (state.ui.tab === 'data') main.innerHTML = renderData();
+    else main.innerHTML = renderOverview();
+  }
+
+  /* ================= 交互 ================= */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-act]');
+    if (!el) return;
+    var act = el.getAttribute('data-act'), v = el.getAttribute('data-v');
+
+    if (act === 'tab') { state.ui.tab = v; save(); render(); return; }
+    if (act === 'theme') { state.ui.theme = v; applyTheme(); save(); render(); return; }
+    if (act === 'toggle') { toggle(v); return; }
+
+    if (act === 'day-move') {
+      var d = new Date(state.ui.date + 'T00:00:00');
+      d.setDate(d.getDate() + (+v));
+      state.ui.date = M.dateStr(d); save(); render(); return;
+    }
+    if (act === 'day-today') { state.ui.date = M.todayStr(); save(); render(); return; }
+
+    if (act === 'pick-cat') { state.ui.cat = v; render(); return; }
+    if (act === 'pick-incat') { state.ui.incCat = v; render(); return; }
+
+    if (act === 'new-cat') { askName('新增支出分类', function (name) {
+      if (!name) return;
+      if (state.cats.expense.indexOf(name) === -1) state.cats.expense.push(name);
+      state.ui.cat = name; save(); render();
+    }); return; }
+
+    if (act === 'new-incat') { askName('新增收入分类', function (name) {
+      if (!name) return;
+      if (state.cats.income.indexOf(name) === -1) state.cats.income.push(name);
+      state.ui.incCat = name; save(); render();
+    }); return; }
+
+    if (act === 'add-expense') { addExpense(); return; }
+    if (act === 'add-income') { addIncome(); return; }
+
+    if (act === 'del') {
+      var kind = el.getAttribute('data-kind');
+      var delDate = '';
+      ['expenses', 'incomes'].forEach(function (arr) {
+        state[arr].forEach(function (r) { if (r.id === v) delDate = r.date; });
+      });
+      if (kind === 'income') state.incomes = state.incomes.filter(function (r) { return r.id !== v; });
+      else state.expenses = state.expenses.filter(function (r) { return r.id !== v; });
+      save(delDate || undefined); render(); return;
+    }
+
+    if (act === 'sync') {
+      if (v === 'new') {
+        syncCode = SYNC.newCode(); SYNC.codeSet(syncCode); flag('同步码已生成'); render(); syncPublishAllRecent();
+      } else if (v === 'join') {
+        var el = document.getElementById('sync-in');
+        var c = (el && el.value || '').trim().toLowerCase();
+        if (!/^[a-z0-9]{4,20}$/.test(c)) { flag('同步码格式不对'); return; }
+        syncCode = c; SYNC.codeSet(c); SYNC.setLastTs(0); flag('已配对'); render(); syncPull(false); syncPublishAllRecent();
+      } else if (v === 'off') {
+        if (!confirm('断开同步？')) return;
+        syncCode = ''; SYNC.codeSet(''); SYNC.setLastTs(0); render();
+      } else if (v === 'now') { syncPull(false); flag('正在同步…'); setTimeout(render, 1200); }
+      else if (v === 'push') { syncPublishAllRecent(); flag('正在重发…'); }
+      else if (v === 'copy') { try { navigator.clipboard.writeText(syncCode); flag('已复制'); } catch (e) { } }
+      return;
+    }
+    if (act === 'export') { doExport(); return; }
+    if (act === 'import') { document.getElementById('file-in').click(); return; }
+    if (act === 'clear') {
+      if (!confirm('清空全部记录？这个操作不可撤销，建议先导出备份。')) return;
+      state.expenses = []; state.incomes = []; save(); render(); return;
+    }
+  });
+
+  document.addEventListener('change', function (e) {
+    var f = e.target.getAttribute && e.target.getAttribute('data-field');
+    if (!f) return;
+    var val = e.target.value;
+    if (f === 'date') { state.ui.date = val || M.todayStr(); save(); render(); return; }
+    if (f === 'rec-date') {
+      var id = e.target.getAttribute('data-id'), kind = e.target.getAttribute('data-kind');
+      var arr = kind === 'income' ? state.incomes : state.expenses;
+      arr.forEach(function (r) { if (r.id === id) r.date = val; });
+      save(); render(); return;
+    }
+  });
+
+  function addExpense() {
+    var amt = M.num(document.getElementById('amt').value);
+    if (!amt) { flag('先填金额'); document.getElementById('amt').focus(); return; }
+    var cat = state.ui.cat || state.cats.expense[0];
+    var useDate = state.ui.date || M.todayStr();
+    state.expenses.push({
+      id: uid(), date: useDate, cat: cat,
+      amount: Math.round(amt * 100) / 100,
+      note: (document.getElementById('note').value || '').trim()
+    });
+    save(useDate); render();
+  }
+
+  function addIncome() {
+    var amt = M.num(document.getElementById('inc-amt').value);
+    if (!amt) { flag('先填金额'); document.getElementById('inc-amt').focus(); return; }
+    var cat = state.ui.incCat || state.cats.income[0];
+    var useInc = document.getElementById('inc-date').value || M.todayStr();
+    state.incomes.push({
+      id: uid(), date: useInc,
+      cat: cat, amount: Math.round(amt * 100) / 100,
+      note: (document.getElementById('inc-note').value || '').trim()
+    });
+    save(useInc); render();
+  }
+
+  function askName(title, cb) {
+    var mask = document.getElementById('mask');
+    var input = document.getElementById('modal-input');
+    document.getElementById('modal-title').textContent = title;
+    input.value = '';
+    mask.classList.add('show');
+    setTimeout(function () { input.focus(); }, 30);
+    var ok = document.getElementById('modal-ok'), cancel = document.getElementById('modal-cancel');
+    function done(go) {
+      mask.classList.remove('show');
+      ok.onclick = cancel.onclick = input.onkeydown = null;
+      if (go) cb(input.value.trim());
+    }
+    ok.onclick = function () { done(true); };
+    cancel.onclick = function () { done(false); };
+    input.onkeydown = function (e) {
+      if (e.key === 'Enter') done(true);
+      if (e.key === 'Escape') done(false);
+    };
+  }
+
+  function doExport() {
+    var blob = new Blob([JSON.stringify(state, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '呐呐财记-' + M.todayStr() + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    flag('已导出');
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target.id !== 'file-in') return;
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        state = merge(JSON.parse(reader.result));
+        save(); render(); flag('已导入');
+      } catch (err) { alert('这个文件读不出来：' + err.message); }
+    };
+    reader.readAsText(f);
+    e.target.value = '';
+  });
+
+  /* ================= 启动 ================= */
+  state = load();
+  state.ui.date = state.ui.date || M.todayStr();
+  applyTheme();
+  if (!state.ui.cat) state.ui.cat = state.cats.expense[0];
+  if (!state.ui.incCat) state.ui.incCat = state.cats.income[0];
+  render();
+  if (SERVER !== null) serverInfoFetch();
+  if (!state.meta.updatedAt) save();
+  window.addEventListener('beforeunload', function () { if (SERVER !== null) save(); });
+})();
+
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { }); });
+}
+</script>
+</body>
+</html>
