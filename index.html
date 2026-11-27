@@ -1640,7 +1640,9 @@ input.inp::placeholder { color: #C6BAAE; }
   if (urlCode && window.SYNC) { SYNC.codeSet(urlCode); SYNC.setLastTs(0); }
 
   state = load();
+  // 日期默认跟今天走：以前记住的旧日期会自动跳到今天（避免把今天的账记到昨天）
   state.ui.date = state.ui.date || M.todayStr();
+  if (state.ui.date < M.todayStr()) state.ui.date = M.todayStr();
   applyTheme();
   if (!state.ui.cat) state.ui.cat = state.cats.expense[0];
   if (!state.ui.incCat) state.ui.incCat = state.cats.income[0];
