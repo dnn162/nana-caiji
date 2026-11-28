@@ -1680,6 +1680,7 @@ input.inp::placeholder { color: #C6BAAE; }
     var mm = (location.search + location.hash).match(/[?&#]code=([a-z0-9]{4,20})/i);
     if (mm) urlCode = mm[1].toLowerCase();
   } catch (e) { }
+  if (window.SYNC && !urlCode && SYNC.codeGet() === 'dnk7m3xq') { SYNC.codeSet('cj8m2n5p'); }   // 串码纠正
   syncCode = urlCode || (window.SYNC && SYNC.codeGet()) || 'cj8m2n5p';   // 默认码，避免两边串码
   if (urlCode && window.SYNC) { SYNC.codeSet(urlCode); SYNC.setLastTs(0); }
 
