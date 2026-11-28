@@ -755,7 +755,8 @@ input.inp::placeholder { color: #C6BAAE; }
   }
 
   // 发布某一天的收支（按天替换，删除也能同步）
-  function syncPublish(date) {
+    function syncPublish(date) {
+    if (SERVER !== null) return;          // 电脑端只读不写
     if (!syncCode || !window.SYNC) return;
     var exp = state.expenses.filter(function (r) { return r.date === date; });
     var inc = state.incomes.filter(function (r) { return r.date === date; });
@@ -807,6 +808,25 @@ input.inp::placeholder { color: #C6BAAE; }
         if (SYNC.outboxCount() > 0) scheduleRetry();
       });
     }, delay);
+  }
+
+  // 把本机全部数据重发一遍（云端只保留12小时，这是防丢失的关键）
+  var _lastBroadcast = 0;
+  function broadcastAll(force) {
+    if (SERVER !== null) return;          // 电脑端不发
+    if (!syncCode || !window.SYNC) return;
+    var now = Date.now();
+    if (!force && now - _lastBroadcast < 10 * 60 * 1000) return;
+    _lastBroadcast = now;
+    var dates = {};
+    (state.expenses || []).forEach(function (r) { if (r && r.date) dates[r.date] = 1; });
+    (state.incomes || []).forEach(function (r) { if (r && r.date) dates[r.date] = 1; });
+    var list = Object.keys(dates).sort();
+    if (list.length > 40) list = list.slice(-40);
+    list.forEach(function (d, i) {
+      setTimeout(function () { syncPublish(d); }, i * 400);
+    });
+    if (state.ui.tab === 'data') render();
   }
 
   function syncPublishAllRecent() {
@@ -966,6 +986,25 @@ input.inp::placeholder { color: #C6BAAE; }
         if (SYNC.outboxCount() > 0) scheduleRetry();
       });
     }, delay);
+  }
+
+  // 把本机全部数据重发一遍（云端只保留12小时，这是防丢失的关键）
+  var _lastBroadcast = 0;
+  function broadcastAll(force) {
+    if (SERVER !== null) return;          // 电脑端不发
+    if (!syncCode || !window.SYNC) return;
+    var now = Date.now();
+    if (!force && now - _lastBroadcast < 10 * 60 * 1000) return;
+    _lastBroadcast = now;
+    var dates = {};
+    (state.expenses || []).forEach(function (r) { if (r && r.date) dates[r.date] = 1; });
+    (state.incomes || []).forEach(function (r) { if (r && r.date) dates[r.date] = 1; });
+    var list = Object.keys(dates).sort();
+    if (list.length > 40) list = list.slice(-40);
+    list.forEach(function (d, i) {
+      setTimeout(function () { syncPublish(d); }, i * 400);
+    });
+    if (state.ui.tab === 'data') render();
   }
 
   function syncPublishAllRecent() {
@@ -1648,8 +1687,34 @@ input.inp::placeholder { color: #C6BAAE; }
   if (!state.ui.incCat) state.ui.incCat = state.cats.income[0];
   render();
   if (SERVER !== null) serverInfoFetch();
+
+  // 窗口自动跟随数据文件：后台同步进程写入后，界面 8 秒内自己刷新
+  if (SERVER !== null) {
+    var _lastFile = '';
+    setInterval(function () {
+      if (document.hidden) return;
+      try {
+        var raw = serverGet('/api/data');
+        if (!raw || raw === _lastFile) return;
+        _lastFile = raw;
+        var incoming = merge(JSON.parse(raw));
+        var ui = state.ui;
+        var a = JSON.stringify([state.expenses, state.incomes, state.cats]);
+        var b = JSON.stringify([incoming.expenses, incoming.incomes, incoming.cats]);
+        if (a !== b) {
+          state = incoming;
+          state.ui = ui;
+          render();
+          flag('已接收新数据');
+        }
+      } catch (e) { }
+    }, 8000);
+  }
   if (!state.meta.updatedAt) save();
   if (syncCode && window.SYNC) {
+    setTimeout(function () { broadcastAll(true); }, 2500);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) broadcastAll(false); });
+    setInterval(function () { if (!document.hidden) broadcastAll(false); }, 1800000);   // 每 30 分钟再发一次
     SYNC.flushOutbox(syncCode);
     if (SYNC.outboxCount() > 0) scheduleRetry();
     syncPull(false);
