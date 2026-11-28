@@ -550,9 +550,10 @@ input.inp::placeholder { color: #C6BAAE; }
   'use strict';
 
   var NTFY = 'https://ntfy.sh';
-  var CODE_KEY = 'daylio-sync-code';
-  var TS_KEY = 'daylio-sync-ts';
-  var OUT_KEY = 'daylio-outbox';
+  var NS = 'cai';
+  var CODE_KEY = NS + '-sync-code';
+  var TS_KEY = NS + '-sync-ts';
+  var OUT_KEY = NS + '-outbox';
 
   var hasCrypto = (typeof crypto !== 'undefined' && crypto.subtle && typeof TextEncoder !== 'undefined');
 
@@ -669,7 +670,7 @@ input.inp::placeholder { color: #C6BAAE; }
 
   function publishRaw(code, dayKey, day, kind) {
     return topicOf(code).then(function (topic) {
-      return seal({ d: dayKey, day: day, kind: kind || 'day', t: Date.now() }, code).then(function (payload) {
+      return seal({ d: dayKey, day: day, k: NS, t: Date.now() }, code).then(function (payload) {
         return fetch(NTFY + '/' + topic, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain', 'Title': 'daylio', 'Priority': 'low' },
@@ -781,6 +782,8 @@ input.inp::placeholder { color: #C6BAAE; }
       if (!res || !res.msgs.length) { SYNC.setLastTs(res ? res.lastTs : SYNC.lastTs()); return; }
       var changed = false;
       res.msgs.forEach(function (m) {
+        if (m.k && m.k !== 'cai') return;                   // 不是财记的消息，跳过
+        if (!m.day || (!m.day.exp && !m.day.inc)) return;
         var d = m.d;
         var exp = (m.day.exp || []), inc = (m.day.inc || []);
         var keptE = state.expenses.filter(function (r) { return r.date !== d; });
@@ -959,6 +962,8 @@ input.inp::placeholder { color: #C6BAAE; }
       if (!res || !res.msgs.length) { SYNC.setLastTs(res ? res.lastTs : SYNC.lastTs()); return; }
       var changed = false;
       res.msgs.forEach(function (m) {
+        if (m.k && m.k !== 'cai') return;                   // 不是财记的消息，跳过
+        if (!m.day || (!m.day.exp && !m.day.inc)) return;
         var d = m.d;
         var exp = (m.day.exp || []), inc = (m.day.inc || []);
         var keptE = state.expenses.filter(function (r) { return r.date !== d; });
@@ -1675,7 +1680,7 @@ input.inp::placeholder { color: #C6BAAE; }
     var mm = (location.search + location.hash).match(/[?&#]code=([a-z0-9]{4,20})/i);
     if (mm) urlCode = mm[1].toLowerCase();
   } catch (e) { }
-  syncCode = urlCode || (window.SYNC && SYNC.codeGet()) || '';
+  syncCode = urlCode || (window.SYNC && SYNC.codeGet()) || 'cj8m2n5p';   // 默认码，避免两边串码
   if (urlCode && window.SYNC) { SYNC.codeSet(urlCode); SYNC.setLastTs(0); }
 
   state = load();
